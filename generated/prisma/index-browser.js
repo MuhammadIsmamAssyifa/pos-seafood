@@ -156,12 +156,12 @@ exports.Prisma.ProductSauceScalarFieldEnum = {
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   tableNumber: 'tableNumber',
-  customerName: 'customerName',
-  customerCount: 'customerCount',
   status: 'status',
   userId: 'userId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  customerCount: 'customerCount',
+  customerName: 'customerName'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {

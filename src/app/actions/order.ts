@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { OrderStatus, ItemStatus, Prisma } from "../../../generated/prisma";
+import { revalidatePath } from "next/cache";
 
 interface OrderItemInput {
     productId: string;
@@ -205,4 +206,22 @@ export async function cancelItem(orderItemId: string, reason: string) {
     }
 }
 
-npx shadcn@latest add button card input badge table
+export async function completeCooking(orderId: string) {
+    try {
+        await prisma.order.update({
+            where: { id: orderId },
+            data: {
+                // Kita bisa ganti statusnya ke PAID jika langsung lunas, 
+                // tapi idealnya ke status baru seperti "READY" 
+                // Untuk sekarang, kita buat dia hilang dari monitor dapur dengan mengubah statusnya
+                status: "PAID"
+            },
+        });
+
+        revalidatePath("/kitchen");
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: "Gagal memperbarui status" };
+    }
+}

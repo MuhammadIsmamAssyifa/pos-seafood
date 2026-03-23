@@ -1,23 +1,46 @@
 import "dotenv/config";
 import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma"; 
+import { PrismaClient, Role } from "../generated/prisma";
 
 const connectionString = `${process.env.DATABASE_URL}`;
 
-// Inisialisasi Driver Postgres
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool as any);
 
-// Inisialisasi Prisma dengan Adapter
 const prisma = new PrismaClient({ adapter });
 
-// const prisma = new PrismaClient();
-
 async function main() {
+  console.log("Cleaning database...");
+  await prisma.orderItem.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.productSauce.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.sauce.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.$executeRawUnsafe(
     `TRUNCATE TABLE "Category", "Product", "Sauce", "ProductSauce" RESTART IDENTITY CASCADE`,
   );
+
+  const admin = await prisma.user.create({
+    data: {
+      id: "cl-admin-123",
+      username: "Kasir Utama",
+      passwordHash: "password123",
+      role: Role.ADMIN,
+    },
+  });
+
+  const tx = await prisma.$transaction(async (transaction) => {
+    const sauces = await Promise.all([
+      transaction.sauce.create({ data: { name: "Saus Padang" } }),
+      transaction.sauce.create({ data: { name: "Saus Mentega" } }),
+      transaction.sauce.create({ data: { name: "Lada Hitam" } }),
+      transaction.sauce.create({ data: { name: "Asam Manis" } }),
+    ]);
+  });
 
   const catSeafood = await prisma.category.create({
     data: { name: "Seafood" },

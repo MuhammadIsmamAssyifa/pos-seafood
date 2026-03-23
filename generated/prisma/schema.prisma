@@ -54,17 +54,15 @@ model ProductSauce {
 model Order {
   id            String      @id @default(uuid())
   tableNumber   Int
-  customerName  String
-  customerCount Int         @default(1) // Jumlah orang
   status        OrderStatus @default(OPEN)
   userId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  customerCount Int         @default(1)
+  customerName  String
   user          User        @relation(fields: [userId], references: [id])
-
-  items    OrderItem[]
-  payments Payment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  items         OrderItem[]
+  payments      Payment[]
 }
 
 model OrderItem {

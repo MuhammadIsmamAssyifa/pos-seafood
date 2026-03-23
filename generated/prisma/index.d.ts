@@ -7272,34 +7272,34 @@ export namespace Prisma {
   export type OrderMinAggregateOutputType = {
     id: string | null
     tableNumber: number | null
-    customerName: string | null
-    customerCount: number | null
     status: $Enums.OrderStatus | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    customerCount: number | null
+    customerName: string | null
   }
 
   export type OrderMaxAggregateOutputType = {
     id: string | null
     tableNumber: number | null
-    customerName: string | null
-    customerCount: number | null
     status: $Enums.OrderStatus | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    customerCount: number | null
+    customerName: string | null
   }
 
   export type OrderCountAggregateOutputType = {
     id: number
     tableNumber: number
-    customerName: number
-    customerCount: number
     status: number
     userId: number
     createdAt: number
     updatedAt: number
+    customerCount: number
+    customerName: number
     _all: number
   }
 
@@ -7317,34 +7317,34 @@ export namespace Prisma {
   export type OrderMinAggregateInputType = {
     id?: true
     tableNumber?: true
-    customerName?: true
-    customerCount?: true
     status?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
+    customerCount?: true
+    customerName?: true
   }
 
   export type OrderMaxAggregateInputType = {
     id?: true
     tableNumber?: true
-    customerName?: true
-    customerCount?: true
     status?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
+    customerCount?: true
+    customerName?: true
   }
 
   export type OrderCountAggregateInputType = {
     id?: true
     tableNumber?: true
-    customerName?: true
-    customerCount?: true
     status?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
+    customerCount?: true
+    customerName?: true
     _all?: true
   }
 
@@ -7437,12 +7437,12 @@ export namespace Prisma {
   export type OrderGroupByOutputType = {
     id: string
     tableNumber: number
-    customerName: string
-    customerCount: number
     status: $Enums.OrderStatus
     userId: string
     createdAt: Date
     updatedAt: Date
+    customerCount: number
+    customerName: string
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -7467,12 +7467,12 @@ export namespace Prisma {
   export type OrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     tableNumber?: boolean
-    customerName?: boolean
-    customerCount?: boolean
     status?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerCount?: boolean
+    customerName?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     payments?: boolean | Order$paymentsArgs<ExtArgs>
@@ -7482,39 +7482,39 @@ export namespace Prisma {
   export type OrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     tableNumber?: boolean
-    customerName?: boolean
-    customerCount?: boolean
     status?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerCount?: boolean
+    customerName?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     tableNumber?: boolean
-    customerName?: boolean
-    customerCount?: boolean
     status?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerCount?: boolean
+    customerName?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
     id?: boolean
     tableNumber?: boolean
-    customerName?: boolean
-    customerCount?: boolean
     status?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerCount?: boolean
+    customerName?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tableNumber" | "customerName" | "customerCount" | "status" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tableNumber" | "status" | "userId" | "createdAt" | "updatedAt" | "customerCount" | "customerName", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -7538,12 +7538,12 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       tableNumber: number
-      customerName: string
-      customerCount: number
       status: $Enums.OrderStatus
       userId: string
       createdAt: Date
       updatedAt: Date
+      customerCount: number
+      customerName: string
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -7972,12 +7972,12 @@ export namespace Prisma {
   interface OrderFieldRefs {
     readonly id: FieldRef<"Order", 'String'>
     readonly tableNumber: FieldRef<"Order", 'Int'>
-    readonly customerName: FieldRef<"Order", 'String'>
-    readonly customerCount: FieldRef<"Order", 'Int'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly userId: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
+    readonly customerCount: FieldRef<"Order", 'Int'>
+    readonly customerName: FieldRef<"Order", 'String'>
   }
     
 
@@ -10833,12 +10833,12 @@ export namespace Prisma {
   export const OrderScalarFieldEnum: {
     id: 'id',
     tableNumber: 'tableNumber',
-    customerName: 'customerName',
-    customerCount: 'customerCount',
     status: 'status',
     userId: 'userId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    customerCount: 'customerCount',
+    customerName: 'customerName'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -11318,12 +11318,12 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     id?: StringFilter<"Order"> | string
     tableNumber?: IntFilter<"Order"> | number
-    customerName?: StringFilter<"Order"> | string
-    customerCount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     userId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerCount?: IntFilter<"Order"> | number
+    customerName?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
     payments?: PaymentListRelationFilter
@@ -11332,12 +11332,12 @@ export namespace Prisma {
   export type OrderOrderByWithRelationInput = {
     id?: SortOrder
     tableNumber?: SortOrder
-    customerName?: SortOrder
-    customerCount?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerCount?: SortOrder
+    customerName?: SortOrder
     user?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
@@ -11349,12 +11349,12 @@ export namespace Prisma {
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
     tableNumber?: IntFilter<"Order"> | number
-    customerName?: StringFilter<"Order"> | string
-    customerCount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     userId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerCount?: IntFilter<"Order"> | number
+    customerName?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
     payments?: PaymentListRelationFilter
@@ -11363,12 +11363,12 @@ export namespace Prisma {
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
     tableNumber?: SortOrder
-    customerName?: SortOrder
-    customerCount?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerCount?: SortOrder
+    customerName?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -11382,12 +11382,12 @@ export namespace Prisma {
     NOT?: OrderScalarWhereWithAggregatesInput | OrderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Order"> | string
     tableNumber?: IntWithAggregatesFilter<"Order"> | number
-    customerName?: StringWithAggregatesFilter<"Order"> | string
-    customerCount?: IntWithAggregatesFilter<"Order"> | number
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     userId?: StringWithAggregatesFilter<"Order"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    customerCount?: IntWithAggregatesFilter<"Order"> | number
+    customerName?: StringWithAggregatesFilter<"Order"> | string
   }
 
   export type OrderItemWhereInput = {
@@ -11790,11 +11790,11 @@ export namespace Prisma {
   export type OrderCreateInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     user: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     payments?: PaymentCreateNestedManyWithoutOrderInput
@@ -11803,12 +11803,12 @@ export namespace Prisma {
   export type OrderUncheckedCreateInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     payments?: PaymentUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -11816,11 +11816,11 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     payments?: PaymentUpdateManyWithoutOrderNestedInput
@@ -11829,12 +11829,12 @@ export namespace Prisma {
   export type OrderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -11842,33 +11842,33 @@ export namespace Prisma {
   export type OrderCreateManyInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
   }
 
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderItemCreateInput = {
@@ -12398,12 +12398,12 @@ export namespace Prisma {
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     tableNumber?: SortOrder
-    customerName?: SortOrder
-    customerCount?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerCount?: SortOrder
+    customerName?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -12414,23 +12414,23 @@ export namespace Prisma {
   export type OrderMaxOrderByAggregateInput = {
     id?: SortOrder
     tableNumber?: SortOrder
-    customerName?: SortOrder
-    customerCount?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerCount?: SortOrder
+    customerName?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
     id?: SortOrder
     tableNumber?: SortOrder
-    customerName?: SortOrder
-    customerCount?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerCount?: SortOrder
+    customerName?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -13442,11 +13442,11 @@ export namespace Prisma {
   export type OrderCreateWithoutUserInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     items?: OrderItemCreateNestedManyWithoutOrderInput
     payments?: PaymentCreateNestedManyWithoutOrderInput
   }
@@ -13454,11 +13454,11 @@ export namespace Prisma {
   export type OrderUncheckedCreateWithoutUserInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     payments?: PaymentUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -13495,12 +13495,12 @@ export namespace Prisma {
     NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
     id?: StringFilter<"Order"> | string
     tableNumber?: IntFilter<"Order"> | number
-    customerName?: StringFilter<"Order"> | string
-    customerCount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     userId?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerCount?: IntFilter<"Order"> | number
+    customerName?: StringFilter<"Order"> | string
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -14047,11 +14047,11 @@ export namespace Prisma {
   export type OrderCreateWithoutItemsInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     user: UserCreateNestedOneWithoutOrdersInput
     payments?: PaymentCreateNestedManyWithoutOrderInput
   }
@@ -14059,12 +14059,12 @@ export namespace Prisma {
   export type OrderUncheckedCreateWithoutItemsInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     payments?: PaymentUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -14130,11 +14130,11 @@ export namespace Prisma {
   export type OrderUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     payments?: PaymentUpdateManyWithoutOrderNestedInput
   }
@@ -14142,12 +14142,12 @@ export namespace Prisma {
   export type OrderUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     payments?: PaymentUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -14209,11 +14209,11 @@ export namespace Prisma {
   export type OrderCreateWithoutPaymentsInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     user: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
@@ -14221,12 +14221,12 @@ export namespace Prisma {
   export type OrderUncheckedCreateWithoutPaymentsInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -14249,11 +14249,11 @@ export namespace Prisma {
   export type OrderUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
@@ -14261,33 +14261,33 @@ export namespace Prisma {
   export type OrderUncheckedUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyUserInput = {
     id?: string
     tableNumber: number
-    customerName: string
-    customerCount?: number
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerCount?: number
+    customerName: string
   }
 
   export type OrderUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     payments?: PaymentUpdateManyWithoutOrderNestedInput
   }
@@ -14295,11 +14295,11 @@ export namespace Prisma {
   export type OrderUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -14307,11 +14307,11 @@ export namespace Prisma {
   export type OrderUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     tableNumber?: IntFieldUpdateOperationsInput | number
-    customerName?: StringFieldUpdateOperationsInput | string
-    customerCount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerCount?: IntFieldUpdateOperationsInput | number
+    customerName?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductCreateManyCategoryInput = {
