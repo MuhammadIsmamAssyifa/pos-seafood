@@ -3928,6 +3928,8 @@ export namespace Prisma {
     isAvailable: boolean | null
     createdAt: Date | null
     categoryId: number | null
+    imageUrl: string | null
+    updatedAt: Date | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -3938,6 +3940,8 @@ export namespace Prisma {
     isAvailable: boolean | null
     createdAt: Date | null
     categoryId: number | null
+    imageUrl: string | null
+    updatedAt: Date | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -3948,6 +3952,8 @@ export namespace Prisma {
     isAvailable: number
     createdAt: number
     categoryId: number
+    imageUrl: number
+    updatedAt: number
     _all: number
   }
 
@@ -3970,6 +3976,8 @@ export namespace Prisma {
     isAvailable?: true
     createdAt?: true
     categoryId?: true
+    imageUrl?: true
+    updatedAt?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -3980,6 +3988,8 @@ export namespace Prisma {
     isAvailable?: true
     createdAt?: true
     categoryId?: true
+    imageUrl?: true
+    updatedAt?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -3990,6 +4000,8 @@ export namespace Prisma {
     isAvailable?: true
     createdAt?: true
     categoryId?: true
+    imageUrl?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -4087,6 +4099,8 @@ export namespace Prisma {
     isAvailable: boolean
     createdAt: Date
     categoryId: number
+    imageUrl: string | null
+    updatedAt: Date
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -4116,6 +4130,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: boolean
     categoryId?: boolean
+    imageUrl?: boolean
+    updatedAt?: boolean
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     allowedSauces?: boolean | Product$allowedSaucesArgs<ExtArgs>
@@ -4130,6 +4146,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: boolean
     categoryId?: boolean
+    imageUrl?: boolean
+    updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4141,6 +4159,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: boolean
     categoryId?: boolean
+    imageUrl?: boolean
+    updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4152,9 +4172,11 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: boolean
     categoryId?: boolean
+    imageUrl?: boolean
+    updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "basePrice" | "unit" | "isAvailable" | "createdAt" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "basePrice" | "unit" | "isAvailable" | "createdAt" | "categoryId" | "imageUrl" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -4183,6 +4205,8 @@ export namespace Prisma {
       isAvailable: boolean
       createdAt: Date
       categoryId: number
+      imageUrl: string | null
+      updatedAt: Date
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -4616,6 +4640,8 @@ export namespace Prisma {
     readonly isAvailable: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly categoryId: FieldRef<"Product", 'Int'>
+    readonly imageUrl: FieldRef<"Product", 'String'>
+    readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
     
 
@@ -10808,7 +10834,9 @@ export namespace Prisma {
     unit: 'unit',
     isAvailable: 'isAvailable',
     createdAt: 'createdAt',
-    categoryId: 'categoryId'
+    categoryId: 'categoryId',
+    imageUrl: 'imageUrl',
+    updatedAt: 'updatedAt'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -11159,6 +11187,8 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     categoryId?: IntFilter<"Product"> | number
+    imageUrl?: StringNullableFilter<"Product"> | string | null
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     allowedSauces?: ProductSauceListRelationFilter
@@ -11172,6 +11202,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
     orderItems?: OrderItemOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     allowedSauces?: ProductSauceOrderByRelationAggregateInput
@@ -11188,6 +11220,8 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     categoryId?: IntFilter<"Product"> | number
+    imageUrl?: StringNullableFilter<"Product"> | string | null
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
     orderItems?: OrderItemListRelationFilter
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     allowedSauces?: ProductSauceListRelationFilter
@@ -11201,6 +11235,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -11219,6 +11255,8 @@ export namespace Prisma {
     isAvailable?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     categoryId?: IntWithAggregatesFilter<"Product"> | number
+    imageUrl?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
 
   export type SauceWhereInput = {
@@ -11643,6 +11681,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category: CategoryCreateNestedOneWithoutProductsInput
     allowedSauces?: ProductSauceCreateNestedManyWithoutProductInput
@@ -11656,6 +11696,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     categoryId: number
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     allowedSauces?: ProductSauceUncheckedCreateNestedManyWithoutProductInput
   }
@@ -11667,6 +11709,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     allowedSauces?: ProductSauceUpdateManyWithoutProductNestedInput
@@ -11680,6 +11724,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     allowedSauces?: ProductSauceUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -11692,6 +11738,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     categoryId: number
+    imageUrl?: string | null
+    updatedAt?: Date | string
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -11701,6 +11749,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -11711,6 +11761,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SauceCreateInput = {
@@ -12213,6 +12265,21 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type OrderItemListRelationFilter = {
     every?: OrderItemWhereInput
     some?: OrderItemWhereInput
@@ -12228,6 +12295,11 @@ export namespace Prisma {
     every?: ProductSauceWhereInput
     some?: ProductSauceWhereInput
     none?: ProductSauceWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type OrderItemOrderByRelationAggregateInput = {
@@ -12246,6 +12318,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
+    imageUrl?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -12261,6 +12335,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
+    imageUrl?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -12271,6 +12347,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
+    imageUrl?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -12310,6 +12388,24 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type SauceCountOrderByAggregateInput = {
@@ -12485,11 +12581,6 @@ export namespace Prisma {
   export type SauceNullableScalarRelationFilter = {
     is?: SauceWhereInput | null
     isNot?: SauceWhereInput | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type OrderItemCountOrderByAggregateInput = {
@@ -12793,6 +12884,10 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type OrderItemUpdateManyWithoutProductNestedInput = {
@@ -13289,6 +13384,20 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -13323,6 +13432,34 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -13338,17 +13475,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
@@ -13510,6 +13636,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     allowedSauces?: ProductSauceCreateNestedManyWithoutProductInput
   }
@@ -13521,6 +13649,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     allowedSauces?: ProductSauceUncheckedCreateNestedManyWithoutProductInput
   }
@@ -13562,6 +13692,8 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
     categoryId?: IntFilter<"Product"> | number
+    imageUrl?: StringNullableFilter<"Product"> | string | null
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
   }
 
   export type OrderItemCreateWithoutProductInput = {
@@ -13802,6 +13934,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     category: CategoryCreateNestedOneWithoutProductsInput
   }
@@ -13814,6 +13948,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     categoryId: number
+    imageUrl?: string | null
+    updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -13856,6 +13992,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
   }
@@ -13868,6 +14006,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -14080,6 +14220,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
     allowedSauces?: ProductSauceCreateNestedManyWithoutProductInput
   }
@@ -14092,6 +14234,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     categoryId: number
+    imageUrl?: string | null
+    updatedAt?: Date | string
     allowedSauces?: ProductSauceUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -14169,6 +14313,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     allowedSauces?: ProductSauceUpdateManyWithoutProductNestedInput
   }
@@ -14181,6 +14327,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     allowedSauces?: ProductSauceUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -14321,6 +14469,8 @@ export namespace Prisma {
     unit?: $Enums.Unit
     isAvailable?: boolean
     createdAt?: Date | string
+    imageUrl?: string | null
+    updatedAt?: Date | string
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -14330,6 +14480,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     allowedSauces?: ProductSauceUpdateManyWithoutProductNestedInput
   }
@@ -14341,6 +14493,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     allowedSauces?: ProductSauceUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -14352,6 +14506,8 @@ export namespace Prisma {
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderItemCreateManyProductInput = {

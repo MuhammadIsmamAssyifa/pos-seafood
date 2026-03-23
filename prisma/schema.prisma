@@ -30,6 +30,8 @@ model Product {
   isAvailable   Boolean        @default(true)
   createdAt     DateTime       @default(now())
   categoryId    Int
+  imageUrl      String?
+  updatedAt     DateTime       @default(now())
   orderItems    OrderItem[]
   category      Category       @relation(fields: [categoryId], references: [id])
   allowedSauces ProductSauce[]

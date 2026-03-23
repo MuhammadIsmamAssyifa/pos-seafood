@@ -140,7 +140,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   unit: 'unit',
   isAvailable: 'isAvailable',
   createdAt: 'createdAt',
-  categoryId: 'categoryId'
+  categoryId: 'categoryId',
+  imageUrl: 'imageUrl',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SauceScalarFieldEnum = {
