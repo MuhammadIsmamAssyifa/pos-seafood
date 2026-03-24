@@ -1,4 +1,3 @@
-// src/app/dashboard/menu/page.tsx
 import { prisma } from "@/lib/prisma";
 import {
   Table,
@@ -11,6 +10,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { CldImage } from "next-cloudinary";
+import ProductImage from "@/components/ProductImage";
 
 export default async function MenuListPage() {
   const products = await prisma.product.findMany({
@@ -24,12 +26,14 @@ export default async function MenuListPage() {
         <div>
           <h1 className="text-3xl font-bold">Daftar Menu</h1>
           <p className="text-muted-foreground">
-            Kelola harga dan ketersediaan menu seafood Anda.
+            Kelola harga dan ketersediaan menu.
           </p>
         </div>
-        <Button className="bg-orange-600 hover:bg-orange-700 gap-2">
-          <Plus className="w-4 h-4" /> Tambah Menu Baru
-        </Button>
+        <Link href="/daftar-menu/create">
+          <Button className="bg-orange-600 hover:bg-orange-700 gap-2 font-bold">
+            <Plus className="w-4 h-4" /> Tambah Menu Baru
+          </Button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border overflow-x-auto">
@@ -46,7 +50,16 @@ export default async function MenuListPage() {
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id}>
-                <TableCell className="font-bold">{product.name}</TableCell>
+                <TableCell className="flex items-center gap-4">
+                  {product.imageUrl ? (
+                    <ProductImage src={product.imageUrl} alt={product.name} />
+                  ) : (
+                    <div className="w-[50px] h-[50px] bg-slate-200 rounded-md flex items-center justify-center text-[10px] text-slate-400">
+                      No Image
+                    </div>
+                  )}
+                  <span className="font-bold">{product.name}</span>
+                </TableCell>
                 <TableCell>
                   <Badge variant="outline" className="capitalize">
                     {product.category.name}

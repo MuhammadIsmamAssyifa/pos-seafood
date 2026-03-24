@@ -22,8 +22,8 @@ import Link from "next/link";
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Kasir (POS)", url: "/pos", icon: ShoppingCart },
-  { title: "Dapur (Kitchen)", url: "/kitchen", icon: ChefHat },
+  { title: "Kasir", url: "/pos", icon: ShoppingCart },
+  { title: "Dapur", url: "/kitchen", icon: ChefHat },
   { title: "Daftar Menu", url: "/daftar-menu", icon: Utensils },
 ];
 
@@ -48,16 +48,19 @@ export function AppSidebar() {
             Menu Utama
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-3">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
+                  <SidebarMenuButton
+                    className="p-3"
+                    tooltip={item.title}
+                  >
                     <Link
                       href={item.url}
                       className="flex items-center gap-3 w-full"
                     >
                       <item.icon className="size-5" />{" "}
-                      <span className="text-base font-semibold tracking-wide">
+                      <span className="text-lg font-semibold tracking-wide">
                         {item.title}
                       </span>
                     </Link>
