@@ -2,23 +2,17 @@
 
 import { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
+import { Trash2, Plus, Minus, Search, ShoppingCart } from "lucide-react";
 import { createOrder } from "@/app/actions/order";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import ProductImage from "@/components/ProductImage";
 
 export default function PosClient({
   products,
@@ -34,8 +28,12 @@ export default function PosClient({
   const [cart, setCart] = useState<any[]>([]);
   const [isSausModalOpen, setIsSausModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-
+  const [search, setSearch] = useState("");
   const router = useRouter();
+
+  const filtered = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const handleAddClick = (product: any) => {
     if (product.unit === "KG") {
@@ -48,10 +46,9 @@ export default function PosClient({
 
   const addToCart = (product: any, sauceId: number | null) => {
     const sauceName = sauces.find((s) => s.id === sauceId)?.name;
-
+    const cartId = `${product.id}-${sauceId}`;
     setCart((prev) => {
-      const cartId = `${product.id}-${sauceId}`;
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item.cartId === cartId);
       if (existing) {
         return prev.map((item) =>
           item.cartId === cartId
@@ -74,8 +71,22 @@ export default function PosClient({
     setIsSausModalOpen(false);
   };
 
-  const removeFromCart = (id: string) => {
-    setCart(cart.filter((item) => item.id !== id));
+  const removeFromCart = (cartId: string) => {
+    setCart(cart.filter((item) => item.cartId !== cartId));
+  };
+
+  const updateQty = (cartId: string, delta: number) => {
+    setCart(
+      cart.map((i) =>
+        i.cartId === cartId
+          ? { ...i, quantity: Math.max(1, i.quantity + delta) }
+          : i,
+      ),
+    );
+  };
+
+  const updateWeight = (cartId: string, weight: number) => {
+    setCart(cart.map((i) => (i.cartId === cartId ? { ...i, weight } : i)));
   };
 
   const total = cart.reduce((sum, item) => {
@@ -86,21 +97,25 @@ export default function PosClient({
     );
   }, 0);
 
+  const itemSubtotal = (item: any) => {
+    const price = Number(item.basePrice);
+    return item.unit === "KG"
+      ? price * (item.weight || 0)
+      : price * item.quantity;
+  };
+
   const handleProcessOrder = async () => {
     if (!customerName || !tableNumber) {
       alert("Nama Pelanggan dan Nomor Papan wajib diisi!");
       return;
     }
-
     setLoading(true);
-
     const itemsToSubmit = cart.map((item) => ({
       productId: item.id,
       quantity: item.quantity,
       weight: item.unit === "KG" ? item.weight : null,
-      sauceId: undefined,
+      sauceId: item.sauceId ?? undefined,
     }));
-
     const result = await createOrder(
       "cl-admin-123",
       Number(tableNumber),
@@ -108,7 +123,6 @@ export default function PosClient({
       customerCount,
       itemsToSubmit,
     );
-
     if (result.success) {
       alert(`Pesanan Berhasil! ID: ${result.orderId}`);
       setCart([]);
@@ -122,192 +136,252 @@ export default function PosClient({
   };
 
   return (
-    <div className="flex h-screen bg-slate-50">
-      <div className="flex-1 p-6 overflow-y-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.map((product) => (
-            <Card key={product.id} className="hover:shadow-lg transition-all">
-              <CardHeader className="p-4">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-md">{product.name}</CardTitle>
-                  <Badge
-                    variant={product.unit === "KG" ? "destructive" : "default"}
-                  >
-                    {product.unit}
-                  </Badge>
+    <div className="flex h-screen bg-white font-['Sora',sans-serif] overflow-hidden">
+      {/* ── LEFT: Product Grid ── */}
+      <div className="flex-1 overflow-y-auto p-5 md:p-7">
+        {/* Search bar */}
+        <div className="flex items-center gap-2 mb-5 flex-wrap">
+          <div className="flex items-center gap-2 flex-1 min-w-[180px] bg-white border border-[#e2ddd6] rounded-xl px-4 h-10">
+            <Search className="w-4 h-4 text-[#a09888] shrink-0" />
+            <input
+              className="flex-1 text-sm outline-none bg-transparent text-[#1c1c18] placeholder:text-[#c8c0b4]"
+              placeholder="Cari menu..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <p className="text-[10px] uppercase tracking-[.8px] font-bold text-[#1c1c18] mb-3">
+          Menu Tersedia · {filtered.length} item
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {filtered.map((product) => (
+            <button
+              key={product.id}
+              onClick={() => handleAddClick(product)}
+              className="group text-left bg-white border border-[#e8e2d8] rounded-2xl p-4 transition-all duration-150 hover:border-[#c45c1a] hover:shadow-[0_2px_12px_rgba(196,92,26,0.12)] active:scale-[.97]"
+            >
+              <div className="flex flex-col items-center">
+                <div className="relative w-full aspect-square mb-2">
+                  {product.imageUrl ? (
+                    <ProductImage
+                      src={product.imageUrl}
+                      alt={product.name}
+                      variant="fill"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-slate-200 rounded-md flex items-center justify-center text-[10px] text-slate-400">
+                      No Image
+                    </div>
+                  )}
                 </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-xl font-bold">
-                  Rp {Number(product.basePrice).toLocaleString("id-ID")}
+              </div>
+              <p className="text-[13px] font-semibold text-[#1c1c18] leading-snug mb-1">
+                {product.name}
+              </p>
+              <div className="flex justify-between">
+                <p className="text-[14px] font-bold text-[#c45c1a]">
+                  Rp {product.basePrice.toLocaleString("id-ID")}
                 </p>
-              </CardContent>
-              <CardFooter className="p-4 border-t">
-                <Button
-                  onClick={() => handleAddClick(product)}
-                  className="w-full"
+                <span
+                  className={cn(
+                    "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide mb-2",
+                    product.unit === "KG"
+                      ? "bg-[#fff3eb] text-[#993c1d]"
+                      : "bg-[#eaf3de] text-[#3b6d11]",
+                  )}
                 >
-                  Tambah
-                </Button>
-              </CardFooter>
-            </Card>
+                  {product.unit === "KG" ? "Per KG" : "Porsi"}
+                </span>
+              </div>
+              <div className="mt-3 w-full py-1.5 rounded-lg text-[11px] font-semibold bg-[#fff8f5] border border-[#f0d4c0] text-[#c45c1a] group-hover:bg-[#c45c1a] group-hover:text-white group-hover:border-[#c45c1a] transition-colors text-center">
+                + Tambah
+              </div>
+            </button>
           ))}
         </div>
       </div>
 
+      {/* ── Sauce Modal ── */}
       <Dialog open={isSausModalOpen} onOpenChange={setIsSausModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-sm rounded-2xl border border-[#e8e2d8]">
           <DialogHeader>
-            <DialogTitle>Pilih Saus untuk {selectedProduct?.name}</DialogTitle>
+            <DialogTitle className="text-[15px] font-bold text-[#1c1c18]">
+              Pilih Saus
+            </DialogTitle>
+            <DialogDescription>
+              {selectedProduct?.name} — pilih bumbu masak
+            </DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-3 py-4">
+          <div className="grid grid-cols-2 gap-2 pt-2">
             {sauces.map((sauce) => (
-              <Button
+              <button
                 key={sauce.id}
-                variant="outline"
-                className="h-16 text-md font-semibold hover:bg-orange-50 hover:border-orange-500"
                 onClick={() => addToCart(selectedProduct, sauce.id)}
+                className="h-14 rounded-xl border border-[#e2ddd6] bg-white text-sm font-semibold text-[#1c1c18] hover:bg-[#fff8f5] hover:border-[#c45c1a] hover:text-[#c45c1a] transition-all"
               >
                 {sauce.name}
-              </Button>
+              </button>
             ))}
           </div>
+          <button
+            onClick={() => setIsSausModalOpen(false)}
+            className="w-full mt-1 py-2.5 rounded-xl border border-[#e2ddd6] bg-[#faf8f5] text-sm text-[#7a7060] font-medium hover:bg-[#f0ebe2] transition-colors"
+          >
+            Batal
+          </button>
         </DialogContent>
       </Dialog>
 
-      <div className="w-96 bg-white border-l shadow-2xl p-6 flex flex-col h-full">
-        <h2 className="text-xl font-bold mb-6 border-b pb-2">
-          Keranjang Pesanan
-        </h2>
+      {/* ── RIGHT: Cart Panel ── */}
+      <aside className="w-full max-w-[340px] shrink-0 bg-white border-l border-[#e8e2d8] flex flex-col h-screen">
+        {/* Cart header */}
+        <div className="px-5 py-4 border-b border-[#f0ebe2]">
+          <p className="text-[15px] font-bold text-[#1c1c18]">
+            Keranjang Pesanan
+          </p>
+          <p className="text-[11px] text-[#a09888] mt-0.5">
+            {cart.length === 0
+              ? "Belum ada item"
+              : `${cart.length} item ditambahkan`}
+          </p>
+        </div>
 
-        <div className="space-y-3 mb-6 bg-slate-100 p-4 rounded-xl">
-          <div>
-            <label className="text-xs font-bold text-slate-500 uppercase">
-              Detail Pelanggan
-            </label>
+        {/* Customer details */}
+        <div className="px-5 py-4 border-b border-[#f0ebe2] bg-white space-y-2.5">
+          <p className="text-[10px] uppercase tracking-[.6px] font-bold text-[#1c1c18]">
+            Detail Pelanggan
+          </p>
+          <input
+            className="w-full h-9 px-3 text-sm border border-[#e2ddd6] rounded-xl outline-none focus:border-[#c45c1a] bg-white text-[#1c1c18] placeholder:text-[#c8c0b4]"
+            placeholder="Nama pelanggan"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+          />
+          <div className="grid grid-cols-2 gap-2">
             <input
-              className="w-full p-2 mt-1 border rounded-md"
-              placeholder="Nama Pelanggan"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
+              className="w-full h-9 px-3 text-sm border border-[#e2ddd6] rounded-xl outline-none focus:border-[#c45c1a] bg-white text-[#1c1c18] placeholder:text-[#c8c0b4]"
+              type="number"
+              placeholder="Jumlah orang"
+              value={customerCount}
+              onChange={(e) => setCustomerCount(parseInt(e.target.value))}
             />
-          </div>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <input
-                className="w-full p-2 border rounded-md"
-                type="number"
-                placeholder="Jumlah Orang"
-                value={customerCount}
-                onChange={(e) => setCustomerCount(parseInt(e.target.value))}
-              />
-            </div>
-            <div className="flex-1">
-              <input
-                className="w-full p-2 border rounded-md bg-yellow-50 border-yellow-200 font-bold"
-                type="number"
-                placeholder="No. Papan"
-                value={tableNumber}
-                onChange={(e) =>
-                  setTableNumber(
-                    e.target.value === "" ? "" : parseInt(e.target.value),
-                  )
-                }
-              />
-            </div>
+            <input
+              className="w-full h-9 px-3 text-sm border border-[#f0d4c0] rounded-xl outline-none focus:border-[#c45c1a] bg-[#fff8f2] text-[#c45c1a] font-bold text-center placeholder:text-[#f0d4c0]"
+              type="number"
+              placeholder="No. Meja"
+              value={tableNumber}
+              onChange={(e) =>
+                setTableNumber(
+                  e.target.value === "" ? "" : parseInt(e.target.value),
+                )
+              }
+            />
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-4">
+        {/* Cart items */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
           {cart.length === 0 ? (
-            <div className="text-center py-20 text-slate-400">
-              Keranjang Kosong
+            <div className="flex flex-col items-center justify-center h-full gap-2 text-[#c8c0b4]">
+              <div className="w-12 h-12 rounded-full bg-[#f5f2ed] flex items-center justify-center">
+                <ShoppingCart className="w-5 h-5 text-[#c8c0b4]" />
+              </div>
+              <p className="text-xs font-medium">Keranjang kosong</p>
             </div>
           ) : (
-            cart.map((item) => (
-              <div key={item.id} className="p-3 bg-slate-50 rounded-lg border">
-                <div className="flex justify-between font-bold mb-2">
-                  <span>
-                    {item.name} {item.sauceName && `(${item.sauceName})`}
-                  </span>
-                  <button onClick={() => removeFromCart(item.id)}>
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </button>
-                </div>
+            <div className="space-y-2.5">
+              {cart.map((item) => (
+                <div
+                  key={item.cartId}
+                  className="bg-[#faf8f5] border border-[#ede8e0] rounded-2xl p-3"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <p className="text-[12.5px] font-semibold text-[#1c1c18] leading-snug">
+                        {item.name}
+                      </p>
+                      {item.sauceName && (
+                        <p className="text-[11px] text-[#c45c1a] mt-0.5">
+                          {item.sauceName}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(item.cartId)}
+                      className="w-6 h-6 rounded-lg bg-[#fff8f5] border border-[#f0d4c0] flex items-center justify-center shrink-0 hover:bg-[#fce8dc] transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3 text-[#c45c1a]" />
+                    </button>
+                  </div>
 
-                {/* LOGIKA INPUT BERAT VS QUANTITY */}
-                {item.unit === "KG" ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">Berat (kg):</span>
-                    <input
-                      type="number"
-                      step="0.1"
-                      className="w-20 p-1 border rounded text-center"
-                      value={item.weight}
-                      onChange={(e) => {
-                        const val = parseFloat(e.target.value);
-                        setCart(
-                          cart.map((i) =>
-                            i.id === item.id ? { ...i, weight: val } : i,
-                          ),
-                        );
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setCart(
-                          cart.map((i) =>
-                            i.id === item.id && i.quantity > 1
-                              ? { ...i, quantity: i.quantity - 1 }
-                              : i,
-                          ),
-                        );
-                      }}
-                    >
-                      <Minus className="w-3 h-3" />
-                    </Button>
-                    <span>{item.quantity} porsi</span>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setCart(
-                          cart.map((i) =>
-                            i.id === item.id
-                              ? { ...i, quantity: i.quantity + 1 }
-                              : i,
-                          ),
-                        );
-                      }}
-                    >
-                      <Plus className="w-3 h-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ))
+                  {item.unit === "KG" ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-[#7a7060]">Berat:</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        className="w-16 h-7 border border-[#e2ddd6] rounded-lg text-center text-sm font-semibold outline-none focus:border-[#c45c1a] text-[#1c1c18]"
+                        value={item.weight}
+                        onChange={(e) =>
+                          updateWeight(item.cartId, parseFloat(e.target.value))
+                        }
+                      />
+                      <span className="text-xs text-[#a09888]">kg</span>
+                      <span className="ml-auto text-xs font-bold text-[#1c1c18]">
+                        Rp {itemSubtotal(item).toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="w-7 h-7 rounded-lg border border-[#e2ddd6] bg-white flex items-center justify-center hover:bg-[#f5f2ed] transition-colors"
+                        onClick={() => updateQty(item.cartId, -1)}
+                      >
+                        <Minus className="w-3 h-3 text-[#5a5040]" />
+                      </button>
+                      <span className="text-sm font-semibold text-[#1c1c18] min-w-[20px] text-center">
+                        {item.quantity}
+                      </span>
+                      <button
+                        className="w-7 h-7 rounded-lg border border-[#e2ddd6] bg-white flex items-center justify-center hover:bg-[#f5f2ed] transition-colors"
+                        onClick={() => updateQty(item.cartId, 1)}
+                      >
+                        <Plus className="w-3 h-3 text-[#5a5040]" />
+                      </button>
+                      <span className="text-[11px] text-[#a09888]">porsi</span>
+                      <span className="ml-auto text-xs font-bold text-[#1c1c18]">
+                        Rp {itemSubtotal(item).toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
-        <div className="border-t pt-4">
-          <div className="flex justify-between text-lg font-black mb-4">
-            <span>Total Tagihan</span>
-            <span>Rp {total.toLocaleString("id-ID")}</span>
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-[#f0ebe2]">
+          <div className="flex items-baseline justify-between mb-4">
+            <span className="text-sm text-[#1c1c18] font-medium">
+              Total Tagihan
+            </span>
+            <span className="text-[22px] font-bold tracking-tight text-[#1c1c18]">
+              Rp {total.toLocaleString("id-ID")}
+            </span>
           </div>
-          <Button
-            className="w-full h-14 text-lg font-bold bg-green-600 hover:bg-green-700"
+          <button
+            className="w-full h-12 rounded-2xl bg-[#2d7a3a] text-white text-sm font-bold tracking-wide hover:bg-[#246030] transition-colors disabled:bg-[#b8d4bc] disabled:cursor-not-allowed"
             disabled={cart.length === 0 || loading}
             onClick={handleProcessOrder}
           >
-            {loading ? "Menyimpan..." : "PROSES & CETAK"}
-          </Button>
+            {loading ? "Menyimpan..." : "Proses & Cetak Nota"}
+          </button>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

@@ -21,8 +21,14 @@ export async function createProduct(formData: FormData) {
         },
     });
 
-    // Refresh data di halaman daftar menu agar produk baru langsung muncul
     revalidatePath("/daftar-menu");
-    // Arahkan kembali ke daftar menu
     redirect("/daftar-menu");
+}
+
+export async function deleteProduct(id: string) {
+    await prisma.product.delete({
+        where: { id },
+    });
+
+    revalidatePath("/daftar-menu");
 }
