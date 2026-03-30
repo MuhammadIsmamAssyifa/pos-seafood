@@ -137,6 +137,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
   basePrice: 'basePrice',
+  sellingPrice: 'sellingPrice',
   unit: 'unit',
   isAvailable: 'isAvailable',
   createdAt: 'createdAt',
@@ -152,7 +153,8 @@ exports.Prisma.SauceScalarFieldEnum = {
 
 exports.Prisma.ProductSauceScalarFieldEnum = {
   productId: 'productId',
-  sauceId: 'sauceId'
+  sauceId: 'sauceId',
+  extraPrice: 'extraPrice'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {

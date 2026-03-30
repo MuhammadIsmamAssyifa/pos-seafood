@@ -1,4 +1,3 @@
-// app/daftar-menu/page.tsx  (server component)
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -23,6 +22,7 @@ export default async function MenuListPage() {
   const safeProducts = products.map((p) => ({
     ...p,
     basePrice: Number(p.basePrice),
+    sellingPrice: Number(p.sellingPrice),
     category: {
       ...p.category,
       id: p.category.id.toString(),

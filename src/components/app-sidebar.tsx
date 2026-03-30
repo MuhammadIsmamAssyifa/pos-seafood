@@ -7,6 +7,7 @@ import {
   Send,
   Fish,
   ChevronRight,
+  Bolt,
   Bell,
   Search,
 } from "lucide-react";
@@ -33,6 +34,7 @@ const items = [
   { title: "Kasir", url: "/pos", icon: ShoppingCart, hasActivity: true },
   { title: "Dapur", url: "/kitchen", icon: ChefHat },
   { title: "Daftar Menu", url: "/daftar-menu", icon: Send },
+  { title: "Pengaturan", url: "/pengaturan", icon: Bolt },
 ];
 
 export function AppSidebar() {
@@ -41,7 +43,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-slate-200 bg-white">
       {/* HEADER */}
-      <SidebarHeader className="h-[60px] border-b border-slate-200 flex items-center px-4">
+      <SidebarHeader className="h-[60px] border-b border-slate-200 flex items-center py-3 px-4">
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-xl bg-orange-600 text-white shadow">
             <Fish className="size-[18px]" />
