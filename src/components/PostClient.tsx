@@ -8,7 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Trash2, Plus, Minus, Search, ShoppingCart } from "lucide-react";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  Search,
+  ChefHat,
+  ShoppingCart,
+} from "lucide-react";
 import { createOrder } from "@/app/actions/order";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -31,9 +38,9 @@ export default function PosClient({
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filtered = products
+    .filter((p) => p.isAvailable)
+    .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleAddClick = (product: any) => {
     if (product.unit === "KG") {
@@ -45,10 +52,20 @@ export default function PosClient({
   };
 
   const addToCart = (product: any, sauceId: number | null) => {
-    const sauceName = sauces.find((s) => s.id === sauceId)?.name;
+    const sauceInfo = selectedProduct?.allowedSauces?.find(
+      (s: any) => s.sauce.id === sauceId,
+    );
+
+    const sauceName = sauceInfo?.sauce.name;
+    const extraPrice = sauceInfo?.extraPrice || 0;
+
+    const finalPrice = product.sellingPrice + extraPrice;
+
     const cartId = `${product.id}-${sauceId}`;
+
     setCart((prev) => {
       const existing = prev.find((item) => item.cartId === cartId);
+
       if (existing) {
         return prev.map((item) =>
           item.cartId === cartId
@@ -56,19 +73,25 @@ export default function PosClient({
             : item,
         );
       }
+
       return [
         ...prev,
         {
           ...product,
+          basePrice: finalPrice,
+          originalBasePrice: product.basePrice,
           cartId,
           sauceId,
           sauceName,
+          extraPrice,
           quantity: 1,
           weight: product.unit === "KG" ? 1 : null,
         },
       ];
     });
+
     setIsSausModalOpen(false);
+    setSelectedProduct(null); // Reset setelah selesai
   };
 
   const removeFromCart = (cartId: string) => {
@@ -172,8 +195,8 @@ export default function PosClient({
                       variant="fill"
                     />
                   ) : (
-                    <div className="w-full h-full bg-slate-200 rounded-md flex items-center justify-center text-[10px] text-slate-400">
-                      No Image
+                    <div className="w-full h-full bg-[#f5f2ed] rounded-md flex items-center justify-center text-[10px] text-slate-400">
+                      <ChefHat className="w-[50px] h-[50px] text-[#c8c0b4]" />
                     </div>
                   )}
                 </div>
@@ -216,13 +239,13 @@ export default function PosClient({
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-2 pt-2">
-            {sauces.map((sauce) => (
+            {selectedProduct?.allowedSauces?.map((item: any) => (
               <button
-                key={sauce.id}
-                onClick={() => addToCart(selectedProduct, sauce.id)}
+                key={item.sauce.id}
+                onClick={() => addToCart(selectedProduct, item.sauce.id)}
                 className="h-14 rounded-xl border border-[#e2ddd6] bg-white text-sm font-semibold text-[#1c1c18] hover:bg-[#fff8f5] hover:border-[#c45c1a] hover:text-[#c45c1a] transition-all"
               >
-                {sauce.name}
+                {item.sauce.name}
               </button>
             ))}
           </div>

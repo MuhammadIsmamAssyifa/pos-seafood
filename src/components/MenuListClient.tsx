@@ -12,26 +12,14 @@ import {
   ChefHat,
 } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
-import { deleteProduct } from "@/app/actions/product";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Trash2Icon } from "lucide-react";
+import { DeleteProductButton } from "@/components/DeleteProductButton";
 
 type Product = {
   id: string;
   name: string;
   basePrice: number;
   unit: string;
+  isAvailable: boolean;
   imageUrl: string | null;
   category: { id: string; name: string };
 };
@@ -172,6 +160,9 @@ export default function MenuListClient({
                 <th className="px-4 py-3 text-left">
                   <span className={thClass}>Unit</span>
                 </th>
+                <th className="px-4 py-3 text-left">
+                  <span className={thClass}>Stok</span>
+                </th>
                 <th className="px-5 py-3 text-right">
                   <span className={thClass + " justify-end"}>Aksi</span>
                 </th>
@@ -252,50 +243,33 @@ export default function MenuListClient({
                       </span>
                     </td>
 
+                    {/* Stock */}
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border ${
+                          product.isAvailable
+                            ? "bg-[#eaf3de] border-[#c0dd97] text-[#3b6d11]"
+                            : "bg-[#fdeaea] border-[#f5b5b5] text-[#a11a1a]"
+                        }`}
+                      >
+                        {product.isAvailable ? "Tersedia" : "Tidak tersedia"}
+                      </span>
+                    </td>
+
                     {/* Actions */}
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
-                          href={`/daftar-menu/${product.id}/edit`}
+                          href={`/daftar-menu/edit/${product.id}`}
                           className="w-8 h-8 rounded-lg border border-[#e2ddd6] bg-white hover:bg-[#f5f2ed] hover:border-[#c8c0b4] flex items-center justify-center transition-colors"
                         >
                           <Edit className="w-3.5 h-3.5 text-[#5a5040]" />
                         </Link>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <button className="w-8 h-8 rounded-lg border border-[#e2ddd6] bg-white hover:bg-[#fcebeb] hover:border-[#f09595] flex items-center justify-center transition-colors">
-                              <Trash2 className="w-3.5 h-3.5 text-[#e24b4a]" />
-                            </button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent className="max-w-md">
-                            <AlertDialogHeader>
-                              <AlertDialogMedia className="text-destructive">
-                                <Trash2Icon />
-                              </AlertDialogMedia>
-                              <AlertDialogTitle>Hapus Menu?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Menu{" "}
-                                <span className="font-semibold">
-                                  "{product.name}"
-                                </span>{" "}
-                                akan dihapus permanen. Tindakan ini tidak bisa
-                                dibatalkan.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
 
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Batal</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={async () => {
-                                  await deleteProduct(product.id);
-                                }}
-                                variant="destructive"
-                              >
-                                Hapus
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        {/* <DeleteProductButton
+                          id={product.id}
+                          name={product.name}
+                        /> */}
                       </div>
                     </td>
                   </tr>

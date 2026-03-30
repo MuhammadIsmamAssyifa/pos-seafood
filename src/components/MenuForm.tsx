@@ -5,9 +5,13 @@ import { CldUploadWidget, CldImage } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
 import { UploadCloud, CheckCircle } from "lucide-react";
 
-export default function MenuForm() {
-  const [publicId, setPublicId] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+type Props = {
+  initialImage?: string;
+};
+
+export default function MenuForm({ initialImage }: Props) {
+  const [publicId, setPublicId] = useState(initialImage || "");
+  const [imageUrl, setImageUrl] = useState(initialImage || "");
 
   return (
     <div className="space-y-4">
