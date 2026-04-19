@@ -85,9 +85,8 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
-    await prisma.product.update({
-        where: { id },
-        data: { isAvailable: false }
+    await prisma.product.delete({
+        where: { id }
     });
     revalidatePath("/daftar-menu");
 }

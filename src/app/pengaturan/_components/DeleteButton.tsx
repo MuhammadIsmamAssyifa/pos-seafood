@@ -18,13 +18,13 @@ export default function DeleteButton({
         if (!confirm("Yakin ingin menghapus data ini?")) return;
         try {
           await action(id);
-          toast.success("Data berhasil dihapus");
+          toast("Data berhasil dihapus");
         } catch (err: any) {
-          toast.error(err.message ?? "Gagal menghapus data");
+          toast(err.message ?? "Gagal menghapus data");
         }
       }}
     >
-      <Trash2 className="w-3.5 h-3.5 text-[#e24b4a]"/>
+      <Trash2 className="w-3.5 h-3.5 text-[#e24b4a]" />
     </button>
   );
 }

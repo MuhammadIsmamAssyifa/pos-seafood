@@ -1,7 +1,7 @@
 // app/pengaturan/page.tsx
 import { prisma } from "@/lib/prisma";
-import CategoryTable from "@/app/actions/pengaturan/_components/CategoryTable";
-import SauceTable from "@/app/actions/pengaturan/_components/SauceTable";
+import CategoryTable from "@/app/pengaturan/_components/CategoryTable";
+import SauceTable from "@/app/pengaturan/_components/SauceTable";
 import { Settings } from "lucide-react";
 
 export default async function SettingsPage() {

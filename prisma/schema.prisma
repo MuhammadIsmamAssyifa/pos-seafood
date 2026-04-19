@@ -72,8 +72,10 @@ model Order {
 model OrderItem {
   id          String     @id @default(uuid())
   orderId     String
-  productId   String
+  productId   String?
   sauceId     Int?
+  productName String
+  sauceName   String?
   quantity    Int        @default(1)
   weight      Decimal?   @db.Decimal(10, 2)
   priceAtTime Decimal    @db.Decimal(12, 2)
@@ -81,9 +83,9 @@ model OrderItem {
   status      ItemStatus @default(PENDING)
   isPaid      Boolean    @default(false)
   createdAt   DateTime   @default(now())
-  order       Order      @relation(fields: [orderId], references: [id])
-  product     Product    @relation(fields: [productId], references: [id])
-  sauce       Sauce?     @relation(fields: [sauceId], references: [id])
+  order       Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product?    @relation(fields: [productId], references: [id], onDelete: SetNull)
+  sauce       Sauce?     @relation(fields: [sauceId], references: [id], onDelete: SetNull)
 }
 
 model Payment {
@@ -107,6 +109,7 @@ enum Unit {
 }
 
 enum OrderStatus {
+  PENDING
   OPEN
   PAID
   CANCELLED
