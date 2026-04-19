@@ -266,10 +266,10 @@ export default function MenuListClient({
                           <Edit className="w-3.5 h-3.5 text-[#5a5040]" />
                         </Link>
 
-                        {/* <DeleteProductButton
+                        <DeleteProductButton
                           id={product.id}
                           name={product.name}
-                        /> */}
+                        />
                       </div>
                     </td>
                   </tr>

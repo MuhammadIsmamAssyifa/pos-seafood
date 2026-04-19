@@ -1,17 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Utensils } from "lucide-react";
 import PosClient from "@/components/PostClient";
 
-export default async function PosPage() {
+export default async function KasirPage() {
   const products = await prisma.product.findMany({
     orderBy: { name: "asc" },
     include: {

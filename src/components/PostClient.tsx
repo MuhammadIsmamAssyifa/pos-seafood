@@ -9,6 +9,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+import {
   Trash2,
   Plus,
   Minus,
@@ -20,10 +27,11 @@ import { createOrder } from "@/app/actions/order";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import ProductImage from "@/components/ProductImage";
+import { useCartStore } from "@/hooks/use-cart-store";
+import { useEffect } from "react";
 
 export default function PosClient({
   products,
-  sauces,
 }: {
   products: any[];
   sauces: any[];
@@ -37,13 +45,22 @@ export default function PosClient({
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [search, setSearch] = useState("");
   const router = useRouter();
+  const setCartStore = useCartStore((state) => state.setCart);
+  const { isCartOpen, setIsCartOpen } = useCartStore();
+
+  useEffect(() => {
+    setCartStore(cart);
+  }, [cart, setCartStore]);
 
   const filtered = products
     .filter((p) => p.isAvailable)
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleAddClick = (product: any) => {
-    if (product.unit === "KG") {
+    const productHasSauces =
+      product.allowedSauces && product.allowedSauces.length > 0;
+
+    if (productHasSauces) {
       setSelectedProduct(product);
       setIsSausModalOpen(true);
     } else {
@@ -52,16 +69,16 @@ export default function PosClient({
   };
 
   const addToCart = (product: any, sauceId: number | null) => {
-    const sauceInfo = selectedProduct?.allowedSauces?.find(
+    const sauceInfo = product.allowedSauces?.find(
       (s: any) => s.sauce.id === sauceId,
     );
 
-    const sauceName = sauceInfo?.sauce.name;
+    const sauceName = sauceInfo?.sauce.name || null;
     const extraPrice = sauceInfo?.extraPrice || 0;
 
-    const finalPrice = product.sellingPrice + extraPrice;
+    const finalPrice = Number(product.sellingPrice) + Number(extraPrice);
 
-    const cartId = `${product.id}-${sauceId}`;
+    const cartId = `${product.id}-${sauceId || "no-sauce"}`;
 
     setCart((prev) => {
       const existing = prev.find((item) => item.cartId === cartId);
@@ -79,7 +96,6 @@ export default function PosClient({
         {
           ...product,
           basePrice: finalPrice,
-          originalBasePrice: product.basePrice,
           cartId,
           sauceId,
           sauceName,
@@ -91,7 +107,7 @@ export default function PosClient({
     });
 
     setIsSausModalOpen(false);
-    setSelectedProduct(null); // Reset setelah selesai
+    setSelectedProduct(null);
   };
 
   const removeFromCart = (cartId: string) => {
@@ -133,12 +149,18 @@ export default function PosClient({
       return;
     }
     setLoading(true);
+
     const itemsToSubmit = cart.map((item) => ({
       productId: item.id,
+      productName: item.name,
+      sauceId: item.sauceId ?? null,
+      sauceName: item.sauceName ?? null,
+      priceAtTime: item.basePrice,
       quantity: item.quantity,
       weight: item.unit === "KG" ? item.weight : null,
-      sauceId: item.sauceId ?? undefined,
+      subtotal: itemSubtotal(item),
     }));
+
     const result = await createOrder(
       "cl-admin-123",
       Number(tableNumber),
@@ -146,6 +168,7 @@ export default function PosClient({
       customerCount,
       itemsToSubmit,
     );
+
     if (result.success) {
       alert(`Pesanan Berhasil! ID: ${result.orderId}`);
       setCart([]);
@@ -160,6 +183,33 @@ export default function PosClient({
 
   return (
     <div className="flex h-screen bg-white font-['Sora',sans-serif] overflow-hidden">
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+        <SheetContent
+          side="right"
+          className="p-0 w-full sm:max-w-[340px] border-l-[#e8e2d8]"
+        >
+          <SheetHeader className="sr-only">
+            <SheetTitle>Keranjang Pesanan</SheetTitle>
+            <SheetDescription>Detail item yang akan dipesan</SheetDescription>
+          </SheetHeader>
+          <CartSidebarContent
+            cart={cart}
+            customerName={customerName}
+            setCustomerName={setCustomerName}
+            customerCount={customerCount}
+            setCustomerCount={setCustomerCount}
+            tableNumber={tableNumber}
+            setTableNumber={setTableNumber}
+            removeFromCart={removeFromCart}
+            updateQty={updateQty}
+            updateWeight={updateWeight}
+            itemSubtotal={itemSubtotal}
+            total={total}
+            loading={loading}
+            handleProcessOrder={handleProcessOrder}
+          />
+        </SheetContent>
+      </Sheet>
       {/* ── LEFT: Product Grid ── */}
       <div className="flex-1 overflow-y-auto p-5 md:p-7">
         {/* Search bar */}
@@ -259,7 +309,7 @@ export default function PosClient({
       </Dialog>
 
       {/* ── RIGHT: Cart Panel ── */}
-      <aside className="w-full max-w-[340px] shrink-0 bg-white border-l border-[#e8e2d8] flex flex-col h-screen">
+      <aside className="hidden md:flex w-full max-w-[340px] shrink-0 bg-white border-l border-[#e8e2d8] flex flex-col h-screen">
         {/* Cart header */}
         <div className="px-5 py-4 border-b border-[#f0ebe2]">
           <p className="text-[15px] font-bold text-[#1c1c18]">
@@ -405,6 +455,156 @@ export default function PosClient({
           </button>
         </div>
       </aside>
+    </div>
+  );
+}
+
+function CartSidebarContent({
+  cart,
+  customerName,
+  setCustomerName,
+  customerCount,
+  setCustomerCount,
+  tableNumber,
+  setTableNumber,
+  removeFromCart,
+  updateQty,
+  updateWeight,
+  itemSubtotal,
+  total,
+  loading,
+  handleProcessOrder,
+}: any) {
+  return (
+    <div className="flex flex-col h-full bg-white">
+      {/* Cart header */}
+      <div className="px-5 py-4 border-b border-[#f0ebe2]">
+        <p className="text-[15px] font-bold text-[#1c1c18]">
+          Keranjang Pesanan
+        </p>
+        <p className="text-[11px] text-[#a09888] mt-0.5">
+          {cart.length === 0
+            ? "Belum ada item"
+            : `${cart.length} item ditambahkan`}
+        </p>
+      </div>
+
+      {/* Customer details */}
+      <div className="px-5 py-4 border-b border-[#f0ebe2] bg-white space-y-2.5">
+        <p className="text-[10px] uppercase tracking-[.6px] font-bold text-[#1c1c18]">
+          Detail Pelanggan
+        </p>
+        <input
+          className="w-full h-9 px-3 text-sm border border-[#e2ddd6] rounded-xl outline-none focus:border-[#c45c1a]"
+          placeholder="Nama pelanggan"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
+        />
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            className="w-full h-9 px-3 text-sm border border-[#e2ddd6] rounded-xl outline-none"
+            type="number"
+            placeholder="Jumlah orang"
+            value={customerCount}
+            onChange={(e) => setCustomerCount(parseInt(e.target.value))}
+          />
+          <input
+            className="w-full h-9 px-3 text-sm border border-[#f0d4c0] rounded-xl outline-none bg-[#fff8f2] text-[#c45c1a] font-bold text-center"
+            type="number"
+            placeholder="No. Meja"
+            value={tableNumber}
+            onChange={(e) =>
+              setTableNumber(
+                e.target.value === "" ? "" : parseInt(e.target.value),
+              )
+            }
+          />
+        </div>
+      </div>
+
+      {/* Cart items */}
+      <div className="flex-1 overflow-y-auto px-5 py-4">
+        {cart.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full gap-2 text-[#c8c0b4]">
+            <ShoppingCart className="w-5 h-5" />
+            <p className="text-xs font-medium">Keranjang kosong</p>
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {cart.map((item: any) => (
+              <div
+                key={item.cartId}
+                className="bg-[#faf8f5] border border-[#ede8e0] rounded-2xl p-3"
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div>
+                    <p className="text-[12.5px] font-semibold text-[#1c1c18]">
+                      {item.name}
+                    </p>
+                    {item.sauceName && (
+                      <p className="text-[11px] text-[#c45c1a]">
+                        {item.sauceName}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => removeFromCart(item.cartId)}
+                    className="text-[#c45c1a]"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                {item.unit === "KG" ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      step="0.1"
+                      className="w-16 h-7 border rounded text-center"
+                      value={item.weight}
+                      onChange={(e) =>
+                        updateWeight(item.cartId, parseFloat(e.target.value))
+                      }
+                    />
+                    <span className="ml-auto text-xs font-bold">
+                      Rp {itemSubtotal(item).toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => updateQty(item.cartId, -1)}>
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQty(item.cartId, 1)}>
+                      <Plus className="w-4 h-4" />
+                    </button>
+                    <span className="ml-auto text-xs font-bold">
+                      Rp {itemSubtotal(item).toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="px-5 py-4 border-t border-[#f0ebe2]">
+        <div className="flex items-baseline justify-between mb-4">
+          <span className="text-sm font-medium">Total Tagihan</span>
+          <span className="text-[22px] font-bold text-[#1c1c18]">
+            Rp {total.toLocaleString("id-ID")}
+          </span>
+        </div>
+        <button
+          className="w-full h-12 rounded-2xl bg-[#2d7a3a] text-white font-bold disabled:bg-gray-300"
+          disabled={cart.length === 0 || loading}
+          onClick={handleProcessOrder}
+        >
+          {loading ? "Menyimpan..." : "Proses & Cetak Nota"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -173,6 +173,8 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   orderId: 'orderId',
   productId: 'productId',
   sauceId: 'sauceId',
+  productName: 'productName',
+  sauceName: 'sauceName',
   quantity: 'quantity',
   weight: 'weight',
   priceAtTime: 'priceAtTime',
@@ -216,6 +218,7 @@ exports.Unit = exports.$Enums.Unit = {
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
+  PENDING: 'PENDING',
   OPEN: 'OPEN',
   PAID: 'PAID',
   CANCELLED: 'CANCELLED'

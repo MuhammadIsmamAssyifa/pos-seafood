@@ -28,11 +28,13 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { title } from "process";
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Kasir", url: "/pos", icon: ShoppingCart, hasActivity: true },
+  { title: "Kasir", url: "/kasir", icon: ShoppingCart, hasActivity: true },
   { title: "Dapur", url: "/kitchen", icon: ChefHat },
+  { title: "Daftar Pesanan", url: "/daftar-pesanan", icon: Bell },
   { title: "Daftar Menu", url: "/daftar-menu", icon: Send },
   { title: "Pengaturan", url: "/pengaturan", icon: Bolt },
 ];

@@ -1,15 +1,18 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { OrderStatus, ItemStatus, Prisma } from "../../../generated/prisma";
+import { OrderStatus, ItemStatus, Prisma, PaymentMethod } from "../../../generated/prisma";
 import { revalidatePath } from "next/cache";
 
 interface OrderItemInput {
     productId: string;
+    productName: string;
     sauceId?: number;
+    sauceName?: string | null;
     quantity: number;
     weight?: number;
     customerName?: string;
+    priceAtTime: number;
 }
 
 export async function createOrder(
@@ -20,7 +23,8 @@ export async function createOrder(
     items: OrderItemInput[]
 ) {
     try {
-        const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+        const result = await prisma.$transaction(async (tx) => {
+            // 1. Cek Meja Aktif
             const existingOrder = await tx.order.findFirst({
                 where: {
                     tableNumber: tableNumber,
@@ -29,9 +33,10 @@ export async function createOrder(
             });
 
             if (existingOrder) {
-                throw new Error(`Papan nomor ${tableNumber} masih digunakan oleh ${existingOrder.customerName}!`);
+                throw new Error(`Meja nomor ${tableNumber} masih digunakan oleh ${existingOrder.customerName}!`);
             }
 
+            // 2. Buat Order Baru
             const order = await tx.order.create({
                 data: {
                     tableNumber,
@@ -42,24 +47,25 @@ export async function createOrder(
                 },
             });
 
+            // 3. Buat Items dengan Snapshot
             for (const item of items) {
-                const product = await tx.product.findUnique({ where: { id: item.productId } });
-                if (!product) throw new Error("Produk tidak ditemukan");
-
-                const price = Number(product.basePrice);
-                const subtotal = product.unit === "KG"
-                    ? price * (item.weight || 0)
-                    : price * item.quantity;
+                // Kalkulasi subtotal (priceAtTime sudah termasuk extra saus dari frontend)
+                const subtotal = item.weight
+                    ? Number(item.priceAtTime) * item.weight
+                    : Number(item.priceAtTime) * item.quantity;
 
                 await tx.orderItem.create({
                     data: {
                         orderId: order.id,
                         productId: item.productId,
+                        productName: item.productName, // SNAPSHOT NAMA
                         sauceId: item.sauceId || null,
+                        sauceName: item.sauceName || null, // SNAPSHOT SAUS
                         quantity: item.quantity,
                         weight: item.weight || null,
-                        priceAtTime: product.basePrice,
+                        priceAtTime: item.priceAtTime,
                         subtotal: subtotal,
+                        status: ItemStatus.PENDING,
                     },
                 });
             }
@@ -67,6 +73,7 @@ export async function createOrder(
             return order;
         });
 
+        revalidatePath("/kitchen"); // Agar monitor dapur update
         return { success: true, orderId: result.id };
     } catch (error: any) {
         return { success: false, error: error.message };
@@ -118,7 +125,9 @@ export async function addItemToOrder(
                     data: {
                         orderId: order!.id,
                         productId: item.productId,
+                        productName: item.productName,
                         sauceId: item.sauceId || null,
+                        sauceName: item.sauceName || null,
                         quantity: item.quantity,
                         weight: item.weight || null,
                         priceAtTime: product.basePrice,
@@ -181,26 +190,18 @@ export async function payItems(orderId: string, itemIds: string[], paymentMethod
     }
 }
 
-export async function cancelItem(orderItemId: string, reason: string) {
+export async function cancelItem(orderItemId: string) {
     try {
-        return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-            const item = await tx.orderItem.findUnique({
-                where: { id: orderItemId },
-            });
-
-            if (!item) throw new Error("Item tidak ditemukan");
-            if (item.isPaid) throw new Error("Item yang sudah dibayar tidak bisa dibatalkan!");
-
-            const updatedItem = await tx.orderItem.update({
-                where: { id: orderItemId },
-                data: {
-                    status: ItemStatus.SERVED,
-                    subtotal: 0,
-                },
-            });
-
-            return { success: true, message: `Berhasil membatalkan pesanan.` };
+        await prisma.orderItem.update({
+            where: { id: orderItemId },
+            data: {
+                status: ItemStatus.SERVED,
+                subtotal: 0,
+                quantity: 0,
+            },
         });
+        revalidatePath("/kasir");
+        return { success: true };
     } catch (error: any) {
         return { success: false, error: error.message };
     }
@@ -208,20 +209,60 @@ export async function cancelItem(orderItemId: string, reason: string) {
 
 export async function completeCooking(orderId: string) {
     try {
-        await prisma.order.update({
-            where: { id: orderId },
-            data: {
-                // Kita bisa ganti statusnya ke PAID jika langsung lunas, 
-                // tapi idealnya ke status baru seperti "READY" 
-                // Untuk sekarang, kita buat dia hilang dari monitor dapur dengan mengubah statusnya
-                status: "PAID"
+        await prisma.orderItem.updateMany({
+            where: {
+                orderId: orderId,
+                status: {
+                    in: ["PENDING", "COOKING"]
+                }
             },
+            data: {
+                status: "SERVED",
+            }
         });
 
         revalidatePath("/kitchen");
+        revalidatePath("/kasir");
         return { success: true };
     } catch (error) {
         console.error(error);
         return { success: false, error: "Gagal memperbarui status" };
+    }
+}
+
+export async function processPayment(
+    orderId: string,
+    method: PaymentMethod,
+    amountPaid: number
+) {
+    try {
+        return await prisma.$transaction(async (tx) => {
+            // 1. Catat Pembayaran
+            await tx.payment.create({
+                data: {
+                    orderId,
+                    method,
+                    amountPaid,
+                },
+            });
+
+            // 2. Tandai semua item di order ini sebagai "Sudah Dibayar"
+            await tx.orderItem.updateMany({
+                where: { orderId },
+                data: { isPaid: true },
+            });
+
+            // 3. Ubah status Order menjadi PAID (Lunas)
+            const updatedOrder = await tx.order.update({
+                where: { id: orderId },
+                data: { status: OrderStatus.PAID },
+            });
+
+            revalidatePath("/kasir");
+            revalidatePath("/laporan");
+            return { success: true, order: updatedOrder };
+        });
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
 }
